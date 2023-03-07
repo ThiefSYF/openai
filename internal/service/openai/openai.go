@@ -40,6 +40,7 @@ type request struct {
 	Messages    []reqMessage `json:"messages"`
 	MaxTokens   int          `json:"max_tokens"`
 	Temperature float32      `json:"temperature"`
+	character_desc string    `json:"character_desc"`
 }
 type reqMessage struct {
 	Role    string `json:"role"`
@@ -127,6 +128,7 @@ func completions(msg string, username string, timeout time.Duration) (string, er
 	}
 	var r request
 	r.Model = "gpt-3.5-turbo"
+	r.character_desc = "你是A2"
 	// 记录对话
 	if _, ok := globalMessageMap[username]; ok {
 		r.Messages = globalMessageMap[username]
@@ -135,7 +137,7 @@ func completions(msg string, username string, timeout time.Duration) (string, er
 		Role:    "user",
 		Content: msg})
 
-	r.MaxTokens = 600
+	r.MaxTokens = 800
 	r.Temperature = 1.2
 	bs, err := json.Marshal(r)
 	if err != nil {
@@ -168,8 +170,8 @@ func completions(msg string, username string, timeout time.Duration) (string, er
 			Content: msg}
 
 		if messageArray, ok := globalMessageMap[username]; ok {
-			// 记住最近五条对话
-			if len(messageArray) > 10 {
+			// 记住最近十条对话
+			if len(messageArray) > 20 {
 				globalMessageMap[username] = globalMessageMap[username][2:]
 			}
 			globalMessageMap[username] = append(globalMessageMap[username], userMessage)
