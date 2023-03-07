@@ -40,7 +40,6 @@ type request struct {
 	Messages    []reqMessage `json:"messages"`
 	MaxTokens   int          `json:"max_tokens"`
 	Temperature float32      `json:"temperature"`
-	character_desc string    `json:"character_desc"`
 }
 type reqMessage struct {
 	Role    string `json:"role"`
@@ -120,6 +119,7 @@ func Query(msg string, user_name string, timeout time.Duration) string {
 	return result
 }
 
+
 // https://beta.openai.com/docs/api-reference/making-requests
 func completions(msg string, username string, timeout time.Duration) (string, error) {
 	msg = strings.TrimSpace(msg)
@@ -128,7 +128,6 @@ func completions(msg string, username string, timeout time.Duration) (string, er
 	}
 	var r request
 	r.Model = "gpt-3.5-turbo"
-	r.character_desc = "你是A2"
 	// 记录对话
 	if _, ok := globalMessageMap[username]; ok {
 		r.Messages = globalMessageMap[username]
